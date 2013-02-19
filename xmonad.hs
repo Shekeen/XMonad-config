@@ -2,6 +2,7 @@
 -- Author: Vic Fryzel
 -- http://github.com/vicfryzel/xmonad-config
 
+import Data.Ratio ((%))
 import System.IO
 import System.Exit
 import XMonad
@@ -16,6 +17,7 @@ import XMonad.Layout.Tabbed
 import XMonad.Layout.IM
 import XMonad.Layout.Grid
 import XMonad.Layout.PerWorkspace
+import XMonad.Layout.Reflect
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
 import qualified XMonad.StackSet as W
@@ -53,14 +55,14 @@ myWorkspaces = ["1:term","2:web","3:code","4:vm","5:media","6:pidgin","7:skype"]
 --
 myManageHook = composeAll
     [ className =? "Firefox"        --> doShift "2:web"
-    , resource  =? "desktop_window" --> doIgnore
-    , className =? "Galculator"     --> doFloat
-    , className =? "Gimp"           --> doFloat
+--  , resource  =? "desktop_window" --> doIgnore
+--  , className =? "Galculator"     --> doFloat
+--  , className =? "Gimp"           --> doFloat
     , resource  =? "gpicview"       --> doFloat
-    , resource  =? "kdesktop"       --> doIgnore
+--  , resource  =? "kdesktop"       --> doIgnore
     , className =? "MPlayer"        --> doFloat
     , className =? "Eclipse"        --> doShift "3:code"
-    , className =? "skype"          --> doShift "7:skype"
+    , className =? "Skype"          --> doShift "7:skype"
     , className =? "Pidgin"         --> doShift "6:pidgin"
     , isFullscreen --> (doF W.focusDown <+> doFullFloat)]
 
@@ -79,9 +81,9 @@ myManageHook = composeAll
 -- workspaces 6 and 7, where I put pidgin and skype
 --
 myLayout =
-    onWorkspace ["3:code"] Full $
-    onWorkspace ["6:pidgin"] (gridIM (1%7) (ClassName "Pidgin")) $
-    onWorkspace ["7:skype"] (gridIM (1%7) (ClassName "skype")) $
+    onWorkspace "3:code" Full $
+    onWorkspace "6:pidgin" (reflectHoriz $ gridIM (1%6) (ClassName "Pidgin")) $
+    onWorkspace "7:skype" (reflectHoriz $ gridIM (1%6) (ClassName "Skype")) $
     avoidStruts (
       Tall 1 (3/100) (1/2) |||
       Mirror (Tall 1 (3/100) (1/2)) |||
